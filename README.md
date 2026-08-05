@@ -1,0 +1,42 @@
+# molecule-cut
+
+Reproducible code and manuscript for the sharp Toy I benchmark in the
+Deng--Hani--Ma two-layer molecule cutting problem.
+
+The paper proves, for every finite Toy I molecule and every permitted execution
+of the source Definition 11.4 algorithm,
+
+\[
+\#\{33\}\ge \left\lceil\frac{|M_U|-1}{3}\right\rceil.
+\]
+
+It also gives explicit families attaining the bound and records the resulting
+scope-limited intrinsic \(v_d\) consequence. The manuscript does not claim a
+global theorem for the full molecule, Toy I plus/II/III, arbitrary legal cuts,
+or complexity hardness.
+
+## Contents
+
+- `MANUSCRIPT.pdf` — compiled paper;
+- `MANUSCRIPT.tex` and `MANUSCRIPT.md` — paper sources;
+- `SPEC.md` — public implementation conventions;
+- `src/molecule_cut/` — model, cutting algorithm, enumerators, and exact DP;
+- `tests/` — unit, exhaustive-small-slice, family, and regression tests;
+- `scripts/` and `data/` — bounded reproduction scripts and stored tables;
+- `REPRODUCIBILITY.md` — commands and finite-audit scope.
+
+The source model is Deng--Hani--Ma, arXiv:2408.07818v3, Sections 11.1--11.2:
+<https://arxiv.org/abs/2408.07818>.
+
+## Quick start
+
+Requires Python 3.12 and `uv`.
+
+```sh
+uv sync --frozen
+uv run --frozen pytest
+uv run --frozen ruff check .
+```
+
+The tests are the executable regression layer; the all-size theorem is proved
+in the manuscript and is not inferred from finite enumeration.

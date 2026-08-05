@@ -1,0 +1,7 @@
+operation,notes_coefficient,observed_max,gap,distribution,scope
+(a),1,1,0,{1: 229},"(|MU|,|MD|) in {(3,2),(3,3),(3,4)}, all tie-breaks; MU restricted to a chain; MD restricted to single-parent rooted trees (F11) -- observed_max is NOT a true upper bound, see F3"
+(b),2,1,1,{1: 64},"(|MU|,|MD|) in {(3,2),(3,3),(3,4)}, all tie-breaks; MU restricted to a chain; MD restricted to single-parent rooted trees (F11) -- observed_max is NOT a true upper bound, see F3"
+cut{33},3,1,2,"{0: 64, 1: 18}","(|MU|,|MD|) in {(3,2),(3,3),(3,4)}, all tie-breaks; MU restricted to a chain; MD restricted to single-parent rooted trees (F11) -- observed_max is NOT a true upper bound, see F3"
+cut{343},4,1,3,"{0: 14, 1: 22}","(|MU|,|MD|) in {(3,2),(3,3),(3,4)}, all tie-breaks; MU restricted to a chain; MD restricted to single-parent rooted trees (F11) -- observed_max is NOT a true upper bound, see F3"
+cut{3},,0,,{0: 84},"(|MU|,|MD|) in {(3,2),(3,3),(3,4)}, all tie-breaks; MU restricted to a chain; MD restricted to single-parent rooted trees (F11) -- observed_max is NOT a true upper bound, see F3"
+cut_U,,0,,{0: 40},"(|MU|,|MD|) in {(3,2),(3,3),(3,4)}, all tie-breaks; MU restricted to a chain; MD restricted to single-parent rooted trees (F11) -- observed_max is NOT a true upper bound, see F3"

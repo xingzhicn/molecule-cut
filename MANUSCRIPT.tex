@@ -1,0 +1,379 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,enumitem,tabularx}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage[hypertexnames=false]{hyperref}
+
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,
+  pdftitle={The Sharp Benchmark Constant for the Deng--Hani--Ma Two-Layer Cutting Algorithm},
+  pdfauthor={Zhangjinba},pdfsubject={Combinatorial molecule reduction}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newcommand{\good}{\#\{33\}}
+\newcommand{\bad}{\#\{4\}}
+\newcommand{\MU}{M_U}
+\newcommand{\MD}{M_D}
+\newcommand{\CUTU}{\operatorname{CUT_U}}
+\newcommand{\ToyI}{\mathrm{ToyI}}
+
+\title{The Sharp Benchmark Constant for the Deng--Hani--Ma Two-Layer Cutting Algorithm}
+\author{Zhangjinba\\Independent Researcher}
+\date{August 5, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}\sloppy
+The simplified two-layer molecule argument of Deng--Hani--Ma gives
+\(\good\ge (|\MU|-1)/5\) for its Toy I cutting algorithm.  We isolate the
+source of this loss and prove the stronger, sharp benchmark bound
+\[
+  \good\ge \left\lceil\frac{|\MU|-1}{3}\right\rceil.
+\]
+The proof is an amortised flow argument.  Cleanup cuts can orphan cross-bonds,
+and operation (b) can orphan one additional cross-bond.  While an upper-layer
+atom remains, local slot capacity is paid for by bottom-fixed-end tokens created
+by earlier cuts.  An injective token map gives \(\#\mathrm{CUT_U}\le2\good\),
+which combines with \(\good=|\MU|-1-\#\mathrm{CUT_U}\).  Three explicit families
+give the matching upper bound, so \(a_n=\lceil(n-1)/3\rceil\) for \(n\ge4\).
+
+As a scoped intrinsic consequence, every finite Toy I molecule satisfies
+\(v_d(M)\ge\lceil\rho(M)/3\rceil-10d\), and the corresponding Toy I
+finite-size constants have asymptotic lower limit at least \(1/3\).  We make no
+claim for global \(c_d^*\), larger toy classes, or arbitrary legal sequences.
+\end{abstract}
+
+\paragraph{Keywords.} combinatorial molecule reduction; sharp constant;
+amortised counting; two-layer graphs; intrinsic cutting value.
+
+\section{Source contract and scope}
+
+We use the two-layer model and Toy I in Section 11 of the public arXiv version
+of Deng--Hani--Ma \cite[Definitions 11.1--11.4]{DHM}.  Each atom has four
+slots, partitioned into bonds, free ends, and fixed ends; fixed ends do not
+count toward degree.  There are at most two parent slots and at most two child
+slots.  A cross-layer bond is directed from \(\MU\) to \(\MD\) and occupies a
+parent slot of its lower endpoint.  Cutting a connected set as free turns each
+boundary bond into one persistent fixed end at the surviving endpoint (bottom
+at a surviving parent and top at a surviving child); fixed ends are neither
+rewired nor duplicated.  Both layers are trees with no initial fixed ends; no
+atom of \(\MD\) is a parent of an atom of \(\MU\); and every atom of \(\MU\)
+has exactly one bond to \(\MD\).
+
+The residual \(\MD\) is proper in the source sense.  We run the six-step
+algorithm of Definition 11.4, allowing all its tie-breaks.  Proposition 11.7
+of the same source gives a complete legal run, elementary output, and
+\(\bad=1\).
+
+Call a complete execution of the six-step algorithm, with any permitted
+tie-break and an empty final residual molecule, a \emph{Definition-11.4
+execution}.  Every cut in such an execution is an elementary component; the
+prescribed three-atom \(\{343\}\) cleanup macro is shorthand for its split into
+one \(\{3\}\) and one \(\{33\}\), so it contributes one to \(\good\) and none
+to \(\bad\).  Separately, a \emph{legal complete cut} means any sequence of
+elementary cuts that ends with an empty residual molecule.  The intrinsic value
+\(v_d\) maximises the resulting score over these general legal complete cuts,
+whereas the benchmark theorem below concerns only Definition-11.4 executions.
+
+For a benchmark run, let \(T=\good\) and \(n=|\MU|\), and define
+\[
+ a_n=\min_{|\MU|=n}\;\min_{\text{Definition-11.4 tie-breaks}} T,
+\]
+where the first minimum ranges over finite Toy I molecules.  The source gives
+\(\bad=1\) and \(T\ge(n-1)/5\).  Our result replaces only the second estimate.
+
+The intrinsic quantities are
+\[
+ v_d(M)=\max_C\bigl(\good(C)-10d\,\bad(C)\bigr),\qquad
+ W(M)=\max_C\good(C),
+\]
+where \(C\) ranges over legal complete cuts.  The benchmark theorem addresses
+\(a_n\); the scoped transfer to \(v_d\) is in Section~\ref{sec:intrinsic}.
+
+\subsection{Source and related work}
+
+Deng--Hani--Ma supply the original \(1/5\) benchmark estimate and its role in
+the hard-sphere derivation \cite{DHM}.  The survey of
+Bodineau--Gallagher--Saint-Raymond--Simonella reproduces the surrounding
+reduction \cite{BGSS}.  Bruned--Clarisse study a Kruskal-style reduction for a
+wave-molecule problem \cite{BC}; that is a structural result on the wave side,
+not the quantitative hard-sphere count proved here.  Our claim is therefore a
+quantitative Toy I benchmark result, not an algorithm-classification claim or
+a new kinetic-limit theorem.  The literature search was bounded, so no
+exhaustive priority claim is made.
+
+\section{Exact accounting}
+
+Call operation (a) an \(A\) event, operation (b) a \(B\) event, a cleanup of an
+adjacent degree-three pair a \(C\) event, a cleanup of a \(\{343\}\) triple a
+\(D\) event, and a one-atom upper-layer removal after its cross-bond partner
+has gone a \(U\) event.  Let \(E_<\) be the \(B,C,D\) events whose pre-cut state
+still contains at least one upper-layer atom.  Cleanups after the upper layer
+is empty are excluded: they cannot orphan a future upper-layer partner.
+
+For a complete run, the counting identities are
+\begin{equation}
+ T=B+C+D,\qquad A-(C+D)=1,\qquad A+B+U=n. \tag{2.0}
+\end{equation}
+The first counts the good components produced by (b), \(C\), and the \(D\)
+split; the second is the change of the source potential; the third partitions
+the upper-layer atoms.
+
+For \(e\in E_<\), let \(S_e\subset\MD\) be its lower-layer cut set.  Define
+\(q_e\) as the live cross-bonds removed by \(e\), except that for a \(B\) event
+the selected upper--lower bond is omitted.  Define \(s_e\) as the number of
+live lower-layer boundary arcs \(p\to v\) with \(p\notin S_e\) and
+\(v\in S_e\), counted by edges, and let \(r_e\) be the number of degree-three
+atoms in \(S_e\) carrying a bottom fixed end.
+
+Thus \(q_e\) counts future upper atoms orphaned by the event, while each
+\(s_e\) creates one bottom-fixed-end token at the surviving lower parent.
+
+\begin{lemma}[Exact orphan partition]
+For every complete run,
+\begin{equation}
+  \#\mathrm{CUT_U}=\sum_{e\in E_<}q_e. \tag{2.1}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Every \(\mathrm{CUT_U}\) atom has lost its unique initial cross-bond partner
+earlier.  A \(C\) or \(D\) event removes exactly the live cross-bonds counted
+by \(q_e\).  A \(B\) event removes its selected upper atom together with the
+selected bond; its other live cross-bonds are exactly those counted by \(q_e\).
+Conversely, every counted bond has a still-present upper endpoint and produces
+one later \(\mathrm{CUT_U}\).  Events after the upper layer is empty have no
+live cross-bond to a future upper atom.\end{proof}
+
+\begin{lemma}[Local flow capacity]
+For every \(e\in E_<\),
+\begin{equation}
+ q_e+s_e\le2+r_e. \tag{2.2}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For a degree-three lower atom \(v\), let \(c_v\) be its live cross-bonds,
+\(p_v\) its live lower-layer parents, and let \(t_v\in\{0,1\}\) indicate
+whether its unique fixed end is bottom.  The atom has two parent slots; a top
+fixed end occupies one of them and a bottom fixed end does not.  Hence
+\begin{equation}
+ c_v+p_v+(1-t_v)\le2. \tag{2.3}
+\end{equation}
+For \(B\), \(q_e=c_v-1\), \(s_e=p_v\), and \(r_e=t_v\), giving the stronger
+\(q_e+s_e\le r_e\).  For \(C\), one internal lower bond contributes one
+parent slot, so summing (2.3) gives \(q_e+s_e\le1+r_e\).  For \(D\), the two
+outer atoms have degree three, the centre has degree four and no fixed end, and
+the two internal bonds contribute two parent slots.  Summing gives
+\(q_e+s_e\le2+r_e\).\end{proof}
+
+\begin{lemma}[Bottom-token injection]
+\begin{equation}
+ \sum_{e\in E_<}r_e\le\sum_{e\in E_<}s_e. \tag{2.4}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Initially the lower layer has no fixed ends.  Before an event in \(E_<\), the
+only operations removing lower atoms are earlier \(B,C,D\) events.  Operations
+(a) and \(U\) remove only upper atoms and create top, not bottom, fixed ends on
+the lower side; step (6) occurs only after the upper layer is empty.  Thus each
+bottom fixed end counted by an \(r_e\) has a unique earlier boundary arc counted
+by some \(s_f\).  The fixed end is never rewired or duplicated, so distinct
+consumed tokens have distinct source arcs.\end{proof}
+
+\begin{theorem}[Sharp Toy I benchmark bound]
+For every finite Toy I molecule and every legal tie-break of Definition 11.4,
+\begin{equation}
+ \good\ge\left\lceil\frac{|\MU|-1}{3}\right\rceil. \tag{2.5}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Summing (2.2) and using (2.4) gives
+\[
+ \sum q_e\le2|E_<|\le2\good.
+\]
+The first inequality uses cancellation of the \(s_e\) terms, and the second
+uses that every \(B,C,D\) event in \(E_<\) produces one good component.  By
+(2.1), \(\#\mathrm{CUT_U}\le2\good\).  From (2.0), eliminating the event
+counts gives
+\[
+ \good=|\MU|-1-\#\mathrm{CUT_U}.
+\]
+Therefore \(|\MU|-1\le3\good\), and integrality gives (2.5).\end{proof}
+
+The exact run-level contract is
+\[
+ \sum_{\text{cleanup }k}b_k+\sum_{B\text{ events }e}q_e
+ \le2(B+C+D).
+\]
+The older condition \(\sum b_k\le2(C+D)\) is a stronger sufficient condition;
+it is neither used nor claimed here.
+
+\section{Sharpness: matching explicit families}
+
+The three families below are finite Toy I molecules.  Their lower layers are
+paths and their upper layers are paths; the cross-bond maps are given explicitly
+so that the construction is independent of enumeration.
+
+\paragraph{Transpose family.}
+For \(k\ge1\), take \(n=3k+1\), let \(\MU=(u_0,\ldots,u_{3k})\) and
+\(\MD=(d_0,\ldots,d_{3k-1})\) be directed paths with internal bonds
+\(u_i\to u_{i+1}\) and \(d_j\to d_{j+1}\), and for
+\(0\le i<3k\) write \(i=qk+r\), \(q\in\{0,1,2\}\), \(0\le r<k\), and join
+\(u_i\) to \(d_{3r+q}\).  Add \(u_{3k}\to d_0\).  The lowest upper atoms
+are removed in the order \(u_{3k},u_{3k-1},\ldots,u_{2k}\), giving \(k+1\)
+operations (a).  Their lower partners are \(d_0,d_{3r+2}\).  After these
+cuts the degree-three set is \(\{d_0\}\cup\{d_{3r+2}:0\le r<k\}\); the
+points are separated along the path until the final cut, when \(d_0,d_2\)
+and their degree-four neighbour \(d_1\) form the first \(\{343\}\).  The
+blocks \(\{d_{3r},d_{3r+1},d_{3r+2}\}\) can then be removed successively in
+the indicated legal tie-break.  For \(0\le r<k-1\), after block \(r\) is
+removed, \(d_{3r+3}\) becomes degree three,
+\(d_{3r+5}\) was already degree three, and \(d_{3r+4}\) remains degree four
+because its cross-bond comes from the still present \(u_{k+r+1}\).  In block
+\(r\), the three designated cross-bonds come from
+\(u_r,u_{k+r},u_{2k+r}\).  For \(r\ge1\), only the last of these endpoints
+has already been removed, so the cleanup breaks two live cross-bonds.  For
+\(r=0\), there is in addition \(u_{3k}\to d_0\), but both this endpoint and
+the designated endpoint \(u_{2k}\) have already been removed; again exactly
+two live cross-bonds are broken.  The final block \(r=k-1\) is the terminal
+cleanup, so no successor indices are needed.  This proves inductively that the
+block cascade is the stated one.  After the \(k\) cleanups, the remaining \(2k\)
+upper atoms are removed by \(\CUTU\).  Thus
+\[
+ (A,B,C,D,U)=(k+1,0,0,k,2k),\qquad \good=k.
+\]
+
+\paragraph{Padded family.}
+Starting from the transpose family, append one atom to the top of \(\MU\) and
+one atom to the end of \(\MD\), and join the two new atoms.  The old lower
+endpoint changes from two bonds and two free ends to three bonds and one free
+end, so its degree is unchanged.  The new upper endpoint is removed last;
+therefore the transpose phase and all its \(k\) cleanups are unchanged.  The
+last lower atom then has degree three, and its pair with the remaining upper
+atom is one operation (b).  For \(n=3k+2\),
+\[
+ (A,B,C,D,U)=(k+1,1,0,k,2k),\qquad \good=k+1.
+\]
+
+\paragraph{Trimmed family.}
+For \(k\ge2\), take \(\MU=(u_0,\ldots,u_{3k-1})\) and
+\(\MD=(d_0,\ldots,d_{3k-2})\) as paths.  Use the transpose cross-bonds except
+that the bond which would end at \(d_{3k-1}\) is redirected to \(d_0\); the
+extra \(u_{3k}\) is omitted.  The first \(k\) upper cuts and the next
+\(k-1\) block cleanups are the same as above.  The cascade stops at the tail
+pair \(d_{3k-3},d_{3k-2}\): one further operation (a) lowers the latter to
+degree three, after which the pair is a \(\{33\}\) cleanup.  This final cleanup
+breaks one live cross-bond, while each preceding block breaks two.  The
+remaining \(2k-1\) upper atoms are then \(\CUTU\) atoms, and
+\[
+ (A,B,C,D,U)=(k+1,0,1,k-1,2k-1),\qquad \good=k.
+\]
+
+Together with Theorem 2.1, these families prove
+\begin{equation}
+ a_n=\left\lceil\frac{n-1}{3}\right\rceil,\qquad n\ge4. \tag{3.1}
+\end{equation}
+
+\section{Intrinsic consequence on Toy I}\label{sec:intrinsic}
+
+The benchmark theorem supplies one legal witness in the intrinsic maximum; it
+does not assert that every legal cutting sequence has the same count.
+
+\begin{proposition}[Scoped intrinsic lower bound]
+Fix \(d>0\).  For every finite Toy I molecule with both layers nonempty,
+\begin{equation}
+ v_d(M)\ge\left\lceil\frac{|\MU|-1}{3}\right\rceil-10d
+ =\left\lceil\frac{\rho(M)}3\right\rceil-10d. \tag{4.1}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Let \(n=|\MU|\) and \(m=|\MD|\).  The two layer trees have \(n-1\) and
+\(m-1\) internal edges, and Toy I has exactly \(n\) cross-bonds.  The full
+graph is connected.  Here \(\rho(M)\) denotes its circuit rank,
+\(\rho(M)=|E|-|V|+1\), so
+\[
+ \rho(M)=|E|-|V|+1=((n-1)+(m-1)+n)-(n+m)+1=n-1.
+\]
+The source algorithm supplies a legal complete run with \(\bad=1\), and
+Theorem 2.1 gives \(\good\ge\lceil(n-1)/3\rceil\) for it.  Since \(v_d\) is
+the maximum score over all legal complete cuts, it is at least the score of
+this witness.\end{proof}
+
+For \(n\ge4\), define the finite-size constant by an infimum (the Toy I
+class has no a priori bound on \(|\MD|\)):
+\[
+ c_d^{\ToyI}(n)=\inf_{\substack{M\text{ finite Toy I}\\|\MU|=n}}
+ \frac{v_d(M)}{\rho(M)}.
+\]
+Then
+\[
+ c_d^{\ToyI}(n)\ge
+ \frac{\lceil(n-1)/3\rceil-10d}{n-1},
+ \qquad
+ \liminf_{n\to\infty}c_d^{\ToyI}(n)\ge\frac13. \tag{4.2}
+\]
+This is an asymptotic statement within Toy I, not the global infimum \(c_d^*\).
+
+\section{Audit and reproducibility}
+
+The proof uses no finite enumeration.  A bounded full-labelled replay checks
+11,590 molecules and 25,243 complete tie-break records with total size at most
+six, including double-parent configurations in both layers.  It reports no
+failed records and no violations of the local flow contract.  This replay is
+regression evidence only.
+
+The public code and reproducibility repository is available at:
+\begin{center}
+\url{https://github.com/xingzhicn/molecule-cut}
+\end{center}
+It reproduces the exact subset-DP values and the family profiles.  The
+reproducibility commands are
+\begin{verbatim}
+uv run --frozen pytest
+uv run --frozen ruff check .
+\end{verbatim}
+On August 5, 2026 these checks reported 652 passing tests, a clean Ruff check,
+and all source hashes valid.
+
+\section{What is and is not concluded}
+
+We prove the exact Toy I/Definition-11.4 benchmark constant \(1/3\), its explicit
+sharpness families, and the scoped intrinsic consequences (4.1)--(4.2).  We do
+not prove a global positive lower bound for \(c_d^*\), a theorem for \(W\), a
+result for Toy I plus/II/III or the full molecule, a score bound for every
+arbitrary legal sequence, or any complexity-hardness classification.  No claim
+is made about global no-localization, no-beam, or impossibility of the broader
+DHM/Boltzmann program.
+
+\begin{thebibliography}{9}
+
+\bibitem{DHM}
+Y.~Deng, Z.~Hani, and X.~Ma,
+\emph{Long time derivation of the Boltzmann equation from hard sphere dynamics},
+arXiv:2408.07818v3 (2025), especially Section 11.2 and Proposition 11.7.
+\url{https://arxiv.org/abs/2408.07818}.
+
+\bibitem{BGSS}
+T.~Bodineau, I.~Gallagher, L.~Saint-Raymond, and S.~Simonella,
+\emph{Derivation of the Boltzmann equation from hard-sphere dynamics
+(after Deng, Hani, Ma)}, S\'eminaire Bourbaki 1247, arXiv:2602.04407, 2026.
+
+\bibitem{BC}
+Y.~Bruned and V.~Clarisse,
+\emph{Kruskal-style algorithm for cubic Schr\"odinger equation molecule
+reduction}, arXiv:2603.23298, 2026.
+
+\end{thebibliography}
+
+\end{document}
