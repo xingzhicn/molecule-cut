@@ -1,20 +1,7 @@
-\documentclass[11pt]{article}
-
-\usepackage[a4paper,margin=1in]{geometry}
-\usepackage{amsmath,amssymb,amsthm}
-\usepackage{booktabs,enumitem,tabularx}
-\usepackage[T1]{fontenc}
-\usepackage{microtype}
-\usepackage[hypertexnames=false]{hyperref}
-
-\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue,
-  pdftitle={The Sharp Benchmark Constant for the Deng--Hani--Ma Two-Layer Cutting Algorithm},
-  pdfauthor={Zhangjinba},pdfsubject={Combinatorial molecule reduction}}
-
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{corollary}[theorem]{Corollary}
+% E-JC submission format. The journal's official style file is unchanged.
+\documentclass[12pt]{article}
+\usepackage[amsmath]{e-jc}
+\hypersetup{hypertexnames=false}
 
 \newcommand{\good}{\#\{33\}}
 \newcommand{\bad}{\#\{4\}}
@@ -23,31 +10,30 @@
 \newcommand{\CUTU}{\operatorname{CUT_U}}
 \newcommand{\ToyI}{\mathrm{ToyI}}
 
+\dateline{Aug 5, 2026}{TBD}{TBD}
+\MSC{05C05, 05C85, 05C90}
+\specs{SUBMITTED}{TBD}{TBD}{00000}
+\Copyright{The author.}
+
 \title{The Sharp Benchmark Constant for the Deng--Hani--Ma Two-Layer Cutting Algorithm}
-\author{Zhangjinba\\Independent Researcher}
-\date{August 5, 2026}
+\author{Zhangjinba}
+\authortext{}{Independent Researcher.}
 
 \begin{document}
 \maketitle
 
-\begin{abstract}\sloppy
-The simplified two-layer molecule argument of Deng--Hani--Ma gives
-\(\good\ge (|\MU|-1)/5\) for its Toy I cutting algorithm.  We isolate the
-source of this loss and prove the stronger, sharp benchmark bound
-\[
-  \good\ge \left\lceil\frac{|\MU|-1}{3}\right\rceil.
-\]
-The proof is an amortised flow argument.  Cleanup cuts can orphan cross-bonds,
-and operation (b) can orphan one additional cross-bond.  While an upper-layer
-atom remains, local slot capacity is paid for by bottom-fixed-end tokens created
-by earlier cuts.  An injective token map gives \(\#\mathrm{CUT_U}\le2\good\),
-which combines with \(\good=|\MU|-1-\#\mathrm{CUT_U}\).  Three explicit families
-give the matching upper bound, so \(a_n=\lceil(n-1)/3\rceil\) for \(n\ge4\).
-
-As a scoped intrinsic consequence, every finite Toy I molecule satisfies
-\(v_d(M)\ge\lceil\rho(M)/3\rceil-10d\), and the corresponding Toy I
-finite-size constants have asymptotic lower limit at least \(1/3\).  We make no
-claim for global \(c_d^*\), larger toy classes, or arbitrary legal sequences.
+\begin{abstract}
+We consider the two-layer Toy I molecule model arising in the combinatorial
+part of the Deng--Hani--Ma hard-sphere argument.  For every finite Toy I
+molecule and every permitted execution of their six-step cutting algorithm, we
+prove that the number of good two-atom components is at least
+\(\lceil(|M_U|-1)/3\rceil\), improving the source benchmark \((|M_U|-1)/5\).
+The proof is an amortised flow argument: orphaned cross-bonds are paid for by
+persistent fixed-end tokens created by earlier cuts.  Three explicit path
+families attain the bound for every \(|M_U|\ge4\), so the benchmark constant is
+exact.  As a scoped consequence, the intrinsic score satisfies
+\(v_d(M)\ge\lceil\rho(M)/3\rceil-10d\) within Toy I.  No claim is made for
+larger toy classes, arbitrary legal cuts, or the global molecule problem.
 \end{abstract}
 
 \paragraph{Keywords.} combinatorial molecule reduction; sharp constant;

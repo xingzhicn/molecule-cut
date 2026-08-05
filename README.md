@@ -20,6 +20,8 @@ or complexity hardness.
 - `MANUSCRIPT.pdf` — compiled paper;
 - `MANUSCRIPT.tex` and `MANUSCRIPT.md` — paper sources;
 - `SPEC.md` — public implementation conventions;
+- `e-jc.sty` — unchanged official E-JC style file used for the submission PDF;
+- `EJC-SUBMISSION-STATEMENT.md` — originality and submission checklist;
 - `src/molecule_cut/` — model, cutting algorithm, enumerators, and exact DP;
 - `tests/` — unit, exhaustive-small-slice, family, and regression tests;
 - `scripts/` and `data/` — bounded reproduction scripts and stored tables;
@@ -27,6 +29,9 @@ or complexity hardness.
 
 The source model is Deng--Hani--Ma, arXiv:2408.07818v3, Sections 11.1--11.2:
 <https://arxiv.org/abs/2408.07818>.
+
+The target-journal author guidelines are available at
+<https://www.combinatorics.org/ojs/index.php/eljc/about/submissions#authorGuidelines>.
 
 ## Quick start
 
