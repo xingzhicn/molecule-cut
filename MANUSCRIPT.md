@@ -1,6 +1,6 @@
 # The sharp benchmark constant for the Deng--Hani--Ma two-layer cutting algorithm
 
-**Status.** Unified short-paper draft, 2026-08-05. The benchmark theorem below
+**Status.** Release candidate, 2026-08-07. The benchmark theorem below
 is proved for the finite Toy I class and every legal tie-break of Definition
 11.4. A separate section then records the scope-limited consequence for the
 intrinsic optimum `v_d`. Finite computation is regression evidence only.
@@ -120,6 +120,48 @@ already gone a `U` event (`CUT_U`). Let `E_<` be the subset of `B`, `C`, and `D`
 events whose pre-cut state still contains at least one atom of `M_U`. This
 cutoff is part of the statement: Step (6) cleanups after the upper layer is
 empty cannot orphan a future upper-layer partner.
+
+The first identity in (2.0) below asserts that every `B` event contributes
+exactly one `{33}`. That requires the selected upper atom to have degree three,
+which the following lemma supplies. The source asserts the conclusion — in the
+proof of [DHM, Proposition 11.7], each cut atom of `M_U` "either forms a
+component by itself or belongs to a `{33}` molecule" — but its step (2) also
+carries the defensive clause "cut `m` as free from `{n,m}` if `n` has deg 4".
+The two are consistent only because that clause is vacuous on Toy I, which we
+now prove.
+
+### Lemma 0 (upper-layer degree at operation (b))
+
+In a Definition-11.4 execution on a finite Toy I molecule, let `n in M_U` be
+the atom selected at step (1) and suppose its cross-bond partner `m in M_D` has
+not yet been cut. Then `n` has degree three, unless `n` is the first atom
+selected by the whole run, in which case `m` has degree four. Consequently
+every `B` event cuts a genuine `{33}`, and the deg-4 clause of step (2) is
+never invoked.
+
+**Proof.** In Toy I every atom of `M_U` carries exactly one cross-bond, which
+occupies one of its at most two child slots; hence every atom of `M_U` has at
+most one child in `M_U`. Summing the number of `M_U`-children over `M_U`
+counts the `|M_U|-1` intralayer bonds, so with every term at most one, exactly
+one atom `n_0 in M_U` has no `M_U`-child.
+
+No top fixed end ever appears in `M_U`: step (1) selects only atoms whose
+`M_U`-children have all been cut, so cutting an upper atom creates no top fixed
+end above it, and cuts inside `M_D` create none either. Hence the fixed ends at
+the selected `n` are exactly the bottom fixed ends created by cutting children
+of `n`. By hypothesis `m` survives, so the cross-bond contributes none, and
+the remaining children of `n` lie in `M_U` and have all been cut. Therefore
+
+```text
+deg(n) = 4 - #{M_U-children of n} = 3 if n != n_0, and 4 if n = n_0.
+```
+
+At the start nothing has been cut, so `n_0` is the unique atom satisfying the
+selection rule of step (1); it is the first atom the run selects. At that
+moment `M_D` is still a tree with no fixed ends, so every atom of `M_D` has
+degree four. Hence `m` has degree four and step (2) takes its "otherwise"
+branch, which is an `A` event. Every selection with a degree-three partner
+therefore has `n != n_0` and `deg(n)=3`. ∎
 
 For a complete run, the source counting identities used below are
 

@@ -25,7 +25,7 @@
 \begin{abstract}
 We consider the two-layer Toy I molecule model arising in the combinatorial
 part of the Deng--Hani--Ma hard-sphere argument.  For every finite Toy I
-molecule and every permitted execution of their six-step cutting algorithm, we
+molecule and every permitted complete execution of their six-step cutting algorithm, we
 prove that the number of good two-atom components is at least
 \(\lceil(|M_U|-1)/3\rceil\), improving the source benchmark \((|M_U|-1)/5\).
 The proof is an amortised flow argument: orphaned cross-bonds are paid for by
@@ -104,13 +104,55 @@ has gone a \(U\) event.  Let \(E_<\) be the \(B,C,D\) events whose pre-cut state
 still contains at least one upper-layer atom.  Cleanups after the upper layer
 is empty are excluded: they cannot orphan a future upper-layer partner.
 
+The first identity in \eqref{eq:counting} below asserts that every \(B\) event
+contributes exactly one \(\{33\}\), which requires the selected upper atom to
+have degree three.  The source asserts the conclusion --- in the proof of
+\cite[Proposition 11.7]{DHM}, each cut upper atom ``either forms a component by
+itself or belongs to a \(\{33\}\) molecule'' --- while its step (2) also carries
+the defensive clause ``cut \(m\) as free from \(\{n,m\}\) if \(n\) has deg
+\(4\)''.  The two are consistent only because that clause is vacuous on Toy I.
+We prove this first.
+
+\begin{lemma}[Upper-layer degree at operation (b)]\label{lem:degree}
+In a Definition-11.4 execution on a finite Toy I molecule, let \(n\in\MU\) be
+the atom selected at step (1) and suppose its cross-bond partner \(m\in\MD\)
+has not yet been cut.  Then \(n\) has degree three, unless \(n\) is the first
+atom selected by the run, in which case \(m\) has degree four.  Consequently
+every \(B\) event cuts a genuine \(\{33\}\), and the degree-four clause of step
+(2) is never invoked.
+\end{lemma}
+
+\begin{proof}
+In Toy I every upper atom carries exactly one cross-bond, which occupies one of
+its at most two child slots; hence every upper atom has at most one child in
+\(\MU\).  Summing the number of \(\MU\)-children over \(\MU\) counts the
+\(|\MU|-1\) intralayer bonds, so with every term at most one, exactly one atom
+\(n_0\in\MU\) has no \(\MU\)-child.
+
+No top fixed end ever appears in \(\MU\): step (1) selects only atoms whose
+\(\MU\)-children have all been cut, so cutting an upper atom creates no top
+fixed end above it, and cuts inside \(\MD\) create none either.  Hence the fixed
+ends at the selected \(n\) are exactly the bottom fixed ends created by cutting
+children of \(n\).  By hypothesis \(m\) survives, so the cross-bond contributes
+none, and the remaining children of \(n\) lie in \(\MU\) and have all been cut.
+Therefore \(\deg(n)=4-\#\{\MU\text{-children of }n\}\), which is \(3\) if
+\(n\neq n_0\) and \(4\) if \(n=n_0\).
+
+At the start nothing has been cut, so \(n_0\) is the unique atom satisfying the
+selection rule of step (1); it is the first atom the run selects.  At that
+moment \(\MD\) is still a tree with no fixed ends, so every atom of \(\MD\) has
+degree four.  Hence \(m\) has degree four and step (2) takes its ``otherwise''
+branch, an \(A\) event.  Every selection with a degree-three partner therefore
+has \(n\neq n_0\) and \(\deg(n)=3\).
+\end{proof}
+
 For a complete run, the counting identities are
-\begin{equation}
+\begin{equation}\label{eq:counting}
  T=B+C+D,\qquad A-(C+D)=1,\qquad A+B+U=n. \tag{2.0}
 \end{equation}
 The first counts the good components produced by (b), \(C\), and the \(D\)
-split; the second is the change of the source potential; the third partitions
-the upper-layer atoms.
+split, and is well defined by Lemma~\ref{lem:degree}; the second is the change
+of the source potential; the third partitions the upper-layer atoms.
 
 For \(e\in E_<\), let \(S_e\subset\MD\) be its lower-layer cut set.  Define
 \(q_e\) as the live cross-bonds removed by \(e\), except that for a \(B\) event
@@ -175,7 +217,7 @@ bottom fixed end counted by an \(r_e\) has a unique earlier boundary arc counted
 by some \(s_f\).  The fixed end is never rewired or duplicated, so distinct
 consumed tokens have distinct source arcs.\end{proof}
 
-\begin{theorem}[Sharp Toy I benchmark bound]
+\begin{theorem}[Sharp Toy I benchmark bound]\label{thm:sharp}
 For every finite Toy I molecule and every legal tie-break of Definition 11.4,
 \begin{equation}
  \good\ge\left\lceil\frac{|\MU|-1}{3}\right\rceil. \tag{2.5}
@@ -265,7 +307,7 @@ remaining \(2k-1\) upper atoms are then \(\CUTU\) atoms, and
  (A,B,C,D,U)=(k+1,0,1,k-1,2k-1),\qquad \good=k.
 \]
 
-Together with Theorem 2.1, these families prove
+Together with Theorem~\ref{thm:sharp}, these families prove
 \begin{equation}
  a_n=\left\lceil\frac{n-1}{3}\right\rceil,\qquad n\ge4. \tag{3.1}
 \end{equation}
@@ -292,7 +334,7 @@ graph is connected.  Here \(\rho(M)\) denotes its circuit rank,
  \rho(M)=|E|-|V|+1=((n-1)+(m-1)+n)-(n+m)+1=n-1.
 \]
 The source algorithm supplies a legal complete run with \(\bad=1\), and
-Theorem 2.1 gives \(\good\ge\lceil(n-1)/3\rceil\) for it.  Since \(v_d\) is
+Theorem~\ref{thm:sharp} gives \(\good\ge\lceil(n-1)/3\rceil\) for it.  Since \(v_d\) is
 the maximum score over all legal complete cuts, it is at least the score of
 this witness.\end{proof}
 
@@ -329,8 +371,9 @@ reproducibility commands are
 uv run --frozen pytest
 uv run --frozen ruff check .
 \end{verbatim}
-On August 5, 2026 these checks reported 652 passing tests, a clean Ruff check,
-and all source hashes valid.
+On the release snapshot, these checks report 653 passing tests and a clean
+Ruff check.  The finite counts above are regression evidence only; they are
+not used in the all-size proof.
 
 \section{What is and is not concluded}
 

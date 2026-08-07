@@ -88,9 +88,18 @@ class AnResult:
 def a_of_molecule(mol: Molecule) -> AnResult:
     """对单个 molecule 穷举 tie-breaking，返回 #{33} 的最小/最大值。"""
     recs = enumerate_tiebreak_records(mol)
-    ok = [(s, r) for s, r in recs if r.failed is None]
-    if not ok:
-        raise RuntimeError(f"all tie-break branches failed for {mol}")
+    # a_n is min over tie-breaks; silently dropping failed branches can only
+    # raise the reported minimum.  Prop. 11.7 guarantees completion for legal
+    # Toy I inputs, so expose any failed branch as an implementation/domain
+    # error instead of filtering it out.
+    bad = [(s, r) for s, r in recs if r.failed is not None]
+    if bad:
+        script, rec = bad[0]
+        raise RuntimeError(
+            f"tie-break branch {script} failed for {mol}: {rec.failed} "
+            f"({len(bad)} of {len(recs)} branches failed)"
+        )
+    ok = recs
     n33s = [r.n33 for _, r in ok]
     lo = min(n33s)
     worst = next(s for s, r in ok if r.n33 == lo)

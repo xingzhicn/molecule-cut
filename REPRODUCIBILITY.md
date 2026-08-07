@@ -17,6 +17,10 @@ The bounded proof-regression audit is:
 uv run --frozen pytest -q tests/test_p_exact_route.py
 ```
 
+On the current release candidate this focused audit has 4 passing tests; the
+full suite has 653 passing tests.  These counts are regression metadata and do
+not replace the written all-size proof.
+
 The intrinsic-transfer checks are:
 
 ```sh

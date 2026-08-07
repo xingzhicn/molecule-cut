@@ -4,3 +4,9 @@
 __pycache__/
 *.py[cod]
 .DS_Store
+.lake/
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz

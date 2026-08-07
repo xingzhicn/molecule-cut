@@ -81,6 +81,56 @@ def _flow_event_statistics(state, step) -> tuple[int, int, int]:
     return orphan_crosses, new_bottom_tokens, consumed_bottom_tokens
 
 
+UPPER_OPS = frozenset({OpKind.A, OpKind.B, OpKind.CUT_U_ONLY})
+
+
+def test_lemma_0_upper_atom_has_degree_three_at_every_b_event():
+    """Finite guard for the upper-layer degree lemma in the manuscript.
+
+    Definition 11.4 step (2) carries a ``cut m as free from {n,m} if n has
+    degree 4`` clause.  The lemma proves that this clause is vacuous on Toy I:
+    the selected upper atom has degree four only for the first selection, and
+    that selection is an A event.  If the clause were reachable, a B cut would
+    not be a {33} and the identity T = B + C + D would fail.
+    """
+    b_events = deg_four_selections = 0
+
+    for n_up in range(1, 6):
+        for n_down in range(1, 6):
+            if n_up + n_down > 6:
+                continue
+            for mol in enumerate_toy1_full_labeled(n_up, n_down):
+                for _, rec in enumerate_tiebreak_records(mol):
+                    assert rec.failed is None, rec.failed
+                    state = mol.copy()
+                    for index, step in enumerate(rec.steps):
+                        if step.op in UPPER_OPS:
+                            (upper,) = [
+                                atom
+                                for atom in step.subset
+                                if state.atoms[atom].layer is Layer.UP
+                            ]
+                            degree = state.degree(upper)
+                            if step.op is OpKind.B:
+                                b_events += 1
+                                assert degree == 3, (
+                                    f"B event with deg(n)={degree}: the cut is not a "
+                                    f"{{33}} and the degree lemma fails"
+                                )
+                            if degree == 4:
+                                deg_four_selections += 1
+                                assert index == 0, (
+                                    f"deg-4 upper atom selected at step {index}, "
+                                    "not only at the first selection"
+                                )
+                                assert step.op is OpKind.A, step.op
+                        state = state.cut_as_free(set(step.subset))
+
+    # Every run selects exactly one degree-four upper atom: its first.
+    assert deg_four_selections == 25_243
+    assert b_events == 1_530
+
+
 def test_exact_reduction_on_all_labelled_toy1_runs_of_total_size_at_most_six():
     """[Exact computation] Full labelled/all-tie audit on the finite slice T_6."""
     molecules = records = 0

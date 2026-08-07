@@ -27,6 +27,10 @@ or complexity hardness.
 - `scripts/` and `data/` — bounded reproduction scripts and stored tables;
 - `REPRODUCIBILITY.md` — commands and finite-audit scope.
 
+`MANUSCRIPT.tex` is the canonical source for the compiled PDF; `MANUSCRIPT.md`
+is the line-oriented reading copy.  Their displayed theorem numbers can differ
+because the E-JC style assigns a shared counter to lemma/theorem environments.
+
 The source model is Deng--Hani--Ma, arXiv:2408.07818v3, Sections 11.1--11.2:
 <https://arxiv.org/abs/2408.07818>.
 
@@ -45,3 +49,7 @@ uv run --frozen ruff check .
 
 The tests are the executable regression layer; the all-size theorem is proved
 in the manuscript and is not inferred from finite enumeration.
+
+The current release candidate includes the upper-layer degree lemma and its
+finite guard.  The full regression suite reports 653 passing tests; the
+focused `test_p_exact_route.py` audit reports 4 passing tests.
