@@ -72,8 +72,8 @@ def main() -> None:
 
     DATA.mkdir(parents=True, exist_ok=True)
     out = DATA / "a_n_upper_bounds.csv"
-    with out.open("w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+    with out.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()), lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
     print(f"wrote {out.relative_to(ROOT)} ({len(rows)} rows, n = 4..{args.max_n})")

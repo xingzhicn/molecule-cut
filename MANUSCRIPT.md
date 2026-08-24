@@ -1,6 +1,6 @@
 # The sharp benchmark constant for the Deng--Hani--Ma two-layer cutting algorithm
 
-**Status.** Release candidate, 2026-08-07. The benchmark theorem below
+**Status.** Preprint release, 2026-08-24. The benchmark theorem below
 is proved for the finite Toy I class and every legal tie-break of Definition
 11.4. A separate section then records the scope-limited consequence for the
 intrinsic optimum `v_d`. Finite computation is regression evidence only.
@@ -65,10 +65,10 @@ components and terminates.
 
 Call a complete execution of the six-step algorithm, with any permitted
 tie-break and an empty final residual molecule, a **Definition-11.4 execution**.
-Every cut in such an execution is an elementary component; the prescribed
-`{343}` cleanup macro is shorthand for its split into one `{3}` and one
-`{33}`, so it contributes one to `#{33}` and no `#{4}`. Separately, a **legal
-complete cut** means any sequence of elementary cuts that ends with an empty
+Its output is elementary after the prescribed `{343}` cleanup macro is resolved
+into one `{3}` and one `{33}`; the macro contributes one to `#{33}` and no
+`#{4}`. Separately, a **legal complete cut** means any sequence of elementary
+cuts that ends with an empty
 residual molecule. The intrinsic quantity `v_d` maximizes the resulting score
 over these general legal complete cuts, whereas the benchmark theorem concerns
 only Definition-11.4 executions.
@@ -89,8 +89,8 @@ W(M)   = max over all legal complete cuts #{33}
 ```
 
 are separate project objects. The benchmark theorem addresses `a_n`; the
-scope-limited transfer to `v_d` is proved in Section 4. No claim is made here
-for `W`, other toy models, or arbitrary legal cutting sequences.
+scope-limited transfer to `v_d` is proved in Section 4. It does not determine
+`W`, other toy models, or arbitrary legal cutting sequences.
 
 ### 1.1 Exact public source location
 
@@ -224,9 +224,10 @@ c_v + p_v + (1-t_v) <= 2.                                  (2.3)
 For `B`, the selected cross-bond is one of the `c_v`, so
 `q_e+s_e <= t_v`, which is stronger than (2.2). For `C`, the one internal
 `M_D` bond contributes one parent slot across the two atoms; summing (2.3)
-gives `q_e+s_e <= 1+r_e`. For `D`, the two outer atoms are degree three and
-the centre is degree four. The two internal bonds contribute two parent slots,
-and the centre has no fixed end. Summing the three slot inequalities gives
+gives `q_e+s_e <= 1+r_e`. For `D`, the two outer atoms are degree three and the
+centre is degree four with no fixed end, so its two parent slots give
+`c_v+p_v<=2`. The two internal bonds contribute two parent slots. Summing the
+three slot inequalities gives
 `q_e+s_e <= 2+r_e`. These cases cover all orientations and allow double-parent
 atoms in either layer. ∎
 
@@ -452,7 +453,8 @@ Not concluded:
 
 * no global ``no-localization'', ``no-beam'', or ``B-v0.1 impossible'' claim;
 * no global positive lower bound for `c_d^*`;
-* no theorem for `W`, Toy I plus/II/III, or the full molecule;
+* no exact formula, complexity classification, or optimal-cut theorem for `W`,
+  Toy I plus/II/III, or the full molecule;
 * no claim that the score bound holds for every arbitrary legal cutting
   sequence; Proposition 6 uses one prescribed legal witness;
 * no complexity classification;

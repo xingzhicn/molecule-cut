@@ -1,6 +1,7 @@
-n,rho,d,W_min,W_max,v_d_min,v_d_max,a_n,minmax_gap,molecules,seconds,enumeration_scope,w_min_witness_json
-1,0,3,0,0,-30,-30,0,0,1,0.0,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,0]],""down"":1,""down_edges"":[],""up"":1,""up_edges"":[]}"
-2,1,3,1,1,-29,-29,1,0,3,0.0,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,0],[1,0]],""down"":2,""down_edges"":[[0,1]],""up"":2,""up_edges"":[[0,1]]}"
-3,2,3,1,2,-29,-28,1,0,18,0.0,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,0],[1,1],[2,0]],""down"":3,""down_edges"":[[0,1],[0,2]],""up"":3,""up_edges"":[[0,1],[1,2]]}"
-4,3,3,2,3,-28,-27,1,1,150,0.6,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,0],[1,0],[2,3],[3,1]],""down"":4,""down_edges"":[[0,1],[0,2],[1,3]],""up"":4,""up_edges"":[[0,1],[1,2],[2,3]]}"
-5,4,3,2,4,-28,-26,2,0,1620,21.5,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,1],[1,2],[2,4],[3,0],[4,0]],""down"":5,""down_edges"":[[0,1],[1,2],[1,3],[2,4]],""up"":5,""up_edges"":[[0,1],[1,2],[2,3],[3,4]]}"
+n,rho,d,W_min,W_max,v_d_min,v_d_max,a_n,minmax_gap,molecules,enumeration_scope,w_min_witness_json
+1,0,3,0,0,-30,-30,0,0,1,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,0]],""down"":1,""down_edges"":[],""up"":1,""up_edges"":[]}"
+2,1,3,1,1,-29,-29,1,0,3,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,0],[1,0]],""down"":2,""down_edges"":[[0,1]],""up"":2,""up_edges"":[[0,1]]}"
+3,2,3,1,2,-29,-28,1,0,18,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,0],[1,1],[2,0]],""down"":3,""down_edges"":[[0,1],[0,2]],""up"":3,""up_edges"":[[0,1],[1,2]]}"
+4,3,3,2,3,-28,-27,1,1,150,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,0],[1,0],[2,3],[3,1]],""down"":4,""down_edges"":[[0,1],[0,2],[1,3]],""up"":4,""up_edges"":[[0,1],[1,2],[2,3]]}"
+5,4,3,2,4,-28,-26,2,0,1620,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,1],[1,2],[2,4],[3,0],[4,0]],""down"":5,""down_edges"":[[0,1],[1,2],[1,3],[2,4]],""up"":5,""up_edges"":[[0,1],[1,2],[2,3],[3,4]]}"
+6,5,3,3,5,-28,-25,2,1,21420,|MD|=|MU|=n; MU chain; MD single-parent rooted tree,"{""cross"":[[0,0],[1,0],[2,2],[3,5],[4,3],[5,1]],""down"":6,""down_edges"":[[0,1],[0,2],[1,3],[1,4],[3,5]],""up"":6,""up_edges"":[[0,1],[1,2],[2,3],[3,4],[4,5]]}"

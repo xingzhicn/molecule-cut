@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software or preprint, please cite this release."
+title: "molecule-cut: reproducible code for the sharp Toy I benchmark"
+type: software
+authors:
+  - family-names: Zhangjinba
+version: 0.1.0
+date-released: 2026-08-24
+license: MIT
+repository-code: "https://github.com/xingzhicn/molecule-cut"
+url: "https://github.com/xingzhicn/molecule-cut"

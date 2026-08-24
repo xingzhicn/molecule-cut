@@ -10,7 +10,7 @@
 \newcommand{\CUTU}{\operatorname{CUT_U}}
 \newcommand{\ToyI}{\mathrm{ToyI}}
 
-\dateline{Aug 5, 2026}{TBD}{TBD}
+\dateline{TBD}{TBD}{TBD}
 \MSC{05C05, 05C85, 05C90}
 \specs{SUBMITTED}{TBD}{TBD}{00000}
 \Copyright{The author.}
@@ -25,13 +25,14 @@
 \begin{abstract}
 We consider the two-layer Toy I molecule model arising in the combinatorial
 part of the Deng--Hani--Ma hard-sphere argument.  For every finite Toy I
-molecule and every permitted complete execution of their six-step cutting algorithm, we
+molecule and every permitted execution of their six-step cutting algorithm, we
 prove that the number of good two-atom components is at least
 \(\lceil(|M_U|-1)/3\rceil\), improving the source benchmark \((|M_U|-1)/5\).
 The proof is an amortised flow argument: orphaned cross-bonds are paid for by
 persistent fixed-end tokens created by earlier cuts.  Three explicit path
-families attain the bound for every \(|M_U|\ge4\), so the benchmark constant is
-exact.  As a scoped consequence, the intrinsic score satisfies
+families attain the bound under stated permitted executions for every
+\(|M_U|\ge4\), so the benchmark constant is exact.  As a scoped consequence,
+the intrinsic score satisfies
 \(v_d(M)\ge\lceil\rho(M)/3\rceil-10d\) within Toy I.  No claim is made for
 larger toy classes, arbitrary legal cuts, or the global molecule problem.
 \end{abstract}
@@ -60,10 +61,10 @@ of the same source gives a complete legal run, elementary output, and
 
 Call a complete execution of the six-step algorithm, with any permitted
 tie-break and an empty final residual molecule, a \emph{Definition-11.4
-execution}.  Every cut in such an execution is an elementary component; the
-prescribed three-atom \(\{343\}\) cleanup macro is shorthand for its split into
-one \(\{3\}\) and one \(\{33\}\), so it contributes one to \(\good\) and none
-to \(\bad\).  Separately, a \emph{legal complete cut} means any sequence of
+execution}.  Its output is elementary after the prescribed three-atom
+\(\{343\}\) cleanup macro is resolved into one \(\{3\}\) and one \(\{33\}\);
+the macro contributes one to \(\good\) and none to \(\bad\).  Separately, a
+\emph{legal complete cut} means any sequence of
 elementary cuts that ends with an empty residual molecule.  The intrinsic value
 \(v_d\) maximises the resulting score over these general legal complete cuts,
 whereas the benchmark theorem below concerns only Definition-11.4 executions.
@@ -198,8 +199,9 @@ fixed end occupies one of them and a bottom fixed end does not.  Hence
 For \(B\), \(q_e=c_v-1\), \(s_e=p_v\), and \(r_e=t_v\), giving the stronger
 \(q_e+s_e\le r_e\).  For \(C\), one internal lower bond contributes one
 parent slot, so summing (2.3) gives \(q_e+s_e\le1+r_e\).  For \(D\), the two
-outer atoms have degree three, the centre has degree four and no fixed end, and
-the two internal bonds contribute two parent slots.  Summing gives
+outer atoms have degree three, while the centre has degree four and no fixed
+end, so its two parent slots give \(c_v+p_v\le2\).  The two internal bonds
+contribute two parent slots.  Summing gives
 \(q_e+s_e\le2+r_e\).\end{proof}
 
 \begin{lemma}[Bottom-token injection]
@@ -217,7 +219,7 @@ bottom fixed end counted by an \(r_e\) has a unique earlier boundary arc counted
 by some \(s_f\).  The fixed end is never rewired or duplicated, so distinct
 consumed tokens have distinct source arcs.\end{proof}
 
-\begin{theorem}[Sharp Toy I benchmark bound]\label{thm:sharp}
+\begin{theorem}[Sharp Toy I benchmark bound]
 For every finite Toy I molecule and every legal tie-break of Definition 11.4,
 \begin{equation}
  \good\ge\left\lceil\frac{|\MU|-1}{3}\right\rceil. \tag{2.5}
@@ -307,7 +309,7 @@ remaining \(2k-1\) upper atoms are then \(\CUTU\) atoms, and
  (A,B,C,D,U)=(k+1,0,1,k-1,2k-1),\qquad \good=k.
 \]
 
-Together with Theorem~\ref{thm:sharp}, these families prove
+Together with Theorem 2.1, these families prove
 \begin{equation}
  a_n=\left\lceil\frac{n-1}{3}\right\rceil,\qquad n\ge4. \tag{3.1}
 \end{equation}
@@ -334,7 +336,7 @@ graph is connected.  Here \(\rho(M)\) denotes its circuit rank,
  \rho(M)=|E|-|V|+1=((n-1)+(m-1)+n)-(n+m)+1=n-1.
 \]
 The source algorithm supplies a legal complete run with \(\bad=1\), and
-Theorem~\ref{thm:sharp} gives \(\good\ge\lceil(n-1)/3\rceil\) for it.  Since \(v_d\) is
+Theorem 2.1 gives \(\good\ge\lceil(n-1)/3\rceil\) for it.  Since \(v_d\) is
 the maximum score over all legal complete cuts, it is at least the score of
 this witness.\end{proof}
 
@@ -371,16 +373,16 @@ reproducibility commands are
 uv run --frozen pytest
 uv run --frozen ruff check .
 \end{verbatim}
-On the release snapshot, these checks report 653 passing tests and a clean
-Ruff check.  The finite counts above are regression evidence only; they are
-not used in the all-size proof.
+On August 21, 2026 these checks reported 675 passing tests, a clean Ruff check,
+and all source hashes valid.
 
 \section{What is and is not concluded}
 
 We prove the exact Toy I/Definition-11.4 benchmark constant \(1/3\), its explicit
 sharpness families, and the scoped intrinsic consequences (4.1)--(4.2).  We do
-not prove a global positive lower bound for \(c_d^*\), a theorem for \(W\), a
-result for Toy I plus/II/III or the full molecule, a score bound for every
+not prove a global positive lower bound for \(c_d^*\), an exact formula,
+complexity classification, or optimal-cut theorem for \(W\), a result for Toy I
+plus/II/III or the full molecule, a score bound for every
 arbitrary legal sequence, or any complexity-hardness classification.  No claim
 is made about global no-localization, no-beam, or impossibility of the broader
 DHM/Boltzmann program.

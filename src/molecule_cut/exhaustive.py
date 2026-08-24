@@ -88,10 +88,9 @@ class AnResult:
 def a_of_molecule(mol: Molecule) -> AnResult:
     """对单个 molecule 穷举 tie-breaking，返回 #{33} 的最小/最大值。"""
     recs = enumerate_tiebreak_records(mol)
-    # a_n is min over tie-breaks; silently dropping failed branches can only
-    # raise the reported minimum.  Prop. 11.7 guarantees completion for legal
-    # Toy I inputs, so expose any failed branch as an implementation/domain
-    # error instead of filtering it out.
+    # a_n 是 min over tie-breaks；静默丢弃失败分支只会把 min 抬高。Prop 1.6 保证
+    # 合法 Toy I 输入下每个分支都完成，故任一 failed 都是实现 bug 或非 Toy I 输入，
+    # 必须立刻暴露而不是被过滤掉。
     bad = [(s, r) for s, r in recs if r.failed is not None]
     if bad:
         script, rec = bad[0]

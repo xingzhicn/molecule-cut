@@ -9,6 +9,7 @@ from molecule_cut.algorithm import OpKind
 from molecule_cut.builders import build
 from molecule_cut.enumerate import enumerate_toy1_full_labeled
 from molecule_cut.exhaustive import enumerate_tiebreak_records
+from molecule_cut.fast_vd import fast_w
 from molecule_cut.molecule import Direction, Layer
 
 CLEANUP_OPS = frozenset({OpKind.CUT33, OpKind.CUT343})
@@ -79,56 +80,6 @@ def _flow_event_statistics(state, step) -> tuple[int, int, int]:
     )
     consumed_bottom_tokens = _bottom_fixed_support(state, step.subset)
     return orphan_crosses, new_bottom_tokens, consumed_bottom_tokens
-
-
-UPPER_OPS = frozenset({OpKind.A, OpKind.B, OpKind.CUT_U_ONLY})
-
-
-def test_lemma_0_upper_atom_has_degree_three_at_every_b_event():
-    """Finite guard for the upper-layer degree lemma in the manuscript.
-
-    Definition 11.4 step (2) carries a ``cut m as free from {n,m} if n has
-    degree 4`` clause.  The lemma proves that this clause is vacuous on Toy I:
-    the selected upper atom has degree four only for the first selection, and
-    that selection is an A event.  If the clause were reachable, a B cut would
-    not be a {33} and the identity T = B + C + D would fail.
-    """
-    b_events = deg_four_selections = 0
-
-    for n_up in range(1, 6):
-        for n_down in range(1, 6):
-            if n_up + n_down > 6:
-                continue
-            for mol in enumerate_toy1_full_labeled(n_up, n_down):
-                for _, rec in enumerate_tiebreak_records(mol):
-                    assert rec.failed is None, rec.failed
-                    state = mol.copy()
-                    for index, step in enumerate(rec.steps):
-                        if step.op in UPPER_OPS:
-                            (upper,) = [
-                                atom
-                                for atom in step.subset
-                                if state.atoms[atom].layer is Layer.UP
-                            ]
-                            degree = state.degree(upper)
-                            if step.op is OpKind.B:
-                                b_events += 1
-                                assert degree == 3, (
-                                    f"B event with deg(n)={degree}: the cut is not a "
-                                    f"{{33}} and the degree lemma fails"
-                                )
-                            if degree == 4:
-                                deg_four_selections += 1
-                                assert index == 0, (
-                                    f"deg-4 upper atom selected at step {index}, "
-                                    "not only at the first selection"
-                                )
-                                assert step.op is OpKind.A, step.op
-                        state = state.cut_as_free(set(step.subset))
-
-    # Every run selects exactly one degree-four upper atom: its first.
-    assert deg_four_selections == 25_243
-    assert b_events == 1_530
 
 
 def test_exact_reduction_on_all_labelled_toy1_runs_of_total_size_at_most_six():
@@ -202,8 +153,63 @@ def test_exact_reduction_on_all_labelled_toy1_runs_of_total_size_at_most_six():
     assert down_double_parent
 
 
+UPPER_OPS = frozenset({OpKind.A, OpKind.B, OpKind.CUT_U_ONLY})
+
+
+def test_lemma_0_upper_atom_has_degree_three_at_every_b_event():
+    """[Exact computation] Finite guard for Lemma 0 of MANUSCRIPT section 2.
+
+    Definition 11.4 step (2) carries a "cut m as free from {n,m} if n has deg 4"
+    clause.  Lemma 0 proves the clause is vacuous on Toy I: the selected upper
+    atom has degree four only for the very first selection of a run, and that
+    selection always meets a degree-four partner, so it is an A event.  If the
+    clause were reachable, a B cut would not be a {33} and the identity
+    T = B + C + D behind (2.0) would fail.
+    """
+    b_events = deg_four_selections = 0
+
+    for n_up in range(1, 6):
+        for n_down in range(1, 6):
+            if n_up + n_down > 6:
+                continue
+            for mol in enumerate_toy1_full_labeled(n_up, n_down):
+                for _, rec in enumerate_tiebreak_records(mol):
+                    assert rec.failed is None, rec.failed
+                    state = mol.copy()
+                    for index, step in enumerate(rec.steps):
+                        if step.op in UPPER_OPS:
+                            (upper,) = [
+                                atom
+                                for atom in step.subset
+                                if state.atoms[atom].layer is Layer.UP
+                            ]
+                            degree = state.degree(upper)
+                            if step.op is OpKind.B:
+                                b_events += 1
+                                assert degree == 3, (
+                                    f"B event with deg(n)={degree}: the cut is not a "
+                                    f"{{33}} and Lemma 0 fails"
+                                )
+                            if degree == 4:
+                                deg_four_selections += 1
+                                assert index == 0, (
+                                    f"deg-4 upper atom selected at step {index}, "
+                                    f"not only at the first selection"
+                                )
+                                assert step.op is OpKind.A, step.op
+                        state = state.cut_as_free(set(step.subset))
+
+    # Every run selects exactly one degree-four upper atom: its first.
+    assert deg_four_selections == 25_243
+    assert b_events == 1_530
+
+
 def test_full_toy1_tie_breaking_can_change_good_component_and_cleanup_counts():
-    """A full-domain witness rules out global tie-invariance claims."""
+    """A full-domain witness rules out global tie-invariance claims.
+
+    The intrinsic optimum is still well-defined and equals 3 here; only the
+    Def. 1.4 greedy execution depends on its cleanup tie-break.
+    """
     mol = build(
         4,
         3,
@@ -218,6 +224,50 @@ def test_full_toy1_tie_breaking_can_change_good_component_and_cleanup_counts():
         outcomes.add((rec.n33, cleanups, cleanup_bonds))
 
     assert outcomes == {(2, 1, 1), (3, 0, 0)}
+    assert fast_w(mol) == 3
+
+
+def _full_domain_tie_break_summary(n_up: int, n_down: int):
+    """Return exact labelled counts for a small full-domain tie-break audit."""
+    molecules = multi = varied = 0
+    outcome_counts = {}
+    for mol in enumerate_toy1_full_labeled(n_up, n_down):
+        molecules += 1
+        records = enumerate_tiebreak_records(mol)
+        assert all(record.failed is None for _, record in records)
+        values = tuple(sorted({record.n33 for _, record in records}))
+        outcome_counts[values] = outcome_counts.get(values, 0) + 1
+        multi += len(records) > 1
+        varied += len(values) > 1
+    return molecules, multi, varied, outcome_counts
+
+
+def test_full_toy1_n3_exactly_refutes_f12_invariance():
+    """All labelled (3,3) Toy I instances include many non-invariant branches."""
+    assert _full_domain_tie_break_summary(3, 3) == (
+        1_134,
+        378,
+        252,
+        {(1,): 468, (2,): 414, (1, 2): 252},
+    )
+
+
+def test_full_toy1_n4_n3_exactly_refutes_f12_invariance():
+    """The same failure persists on the complete labelled (4,3) slice."""
+    assert _full_domain_tie_break_summary(4, 3) == (
+        7_560,
+        4_536,
+        2_112,
+        {
+            (1,): 1_800,
+            (2,): 3_288,
+            (3,): 360,
+            (1, 2): 1_320,
+            (1, 3): 48,
+            (2, 3): 672,
+            (1, 2, 3): 72,
+        },
+    )
 
 
 def test_b_operation_correction_is_a_real_part_of_the_exact_reduction():

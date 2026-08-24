@@ -69,6 +69,14 @@ def test_fast_targets_match_references_on_branched_mu():
     assert w(mol) == w_reference(mol)
 
 
+def test_w_is_not_unconditionally_v_d_plus_10d():
+    """The two intrinsic objectives can prefer different decompositions."""
+    mol = build(3, 3, [(0, 1), (1, 2)], [(0, 1), (1, 2)], [(2, 2)])
+    assert fast_w(mol) == w_reference(mol) == 1
+    assert fast_v_d(mol, d=3) == -30
+    assert fast_v_d(mol, d=3) + 30 == 0
+
+
 def test_public_v_d_uses_fast_path():
     """默认 `v_d` 与 `fast_v_d` 一致（默认路径不再走对象级 DP）。"""
     for mol in enumerate_toy1(3):

@@ -1,7 +1,7 @@
-"""B2/X3C spike 的构造守卫。
+"""B2/X3C spike 的 corrected-W 回归。
 
-此前把 `v_d + 10d` 当成 W，故所有涉及 W 阈值的负结论均已冻结，等待以
-真正的 W 重跑。这里只保留构造合法性与小实例的对象语义回归。
+这些有限实例不是 hardness 证明。它们锁定旧 gadget 在独立 `W` DP 下的真实
+得分，并证明当前 YES/SCRAMBLE 对照没有 proposed exact-cover threshold gap。
 """
 
 from __future__ import annotations
@@ -10,6 +10,7 @@ import pytest
 
 from molecule_cut.builders import build
 from molecule_cut.classify import W_of, is_toy1, n_2conn
+from molecule_cut.fast_vd import fast_v_d
 from molecule_cut.gadgets import (
     hubs_2conn,
     three_set_gadget,
@@ -21,21 +22,29 @@ from molecule_cut.gadgets import (
 )
 
 
-def test_hubs_are_not_toy1_and_have_2conn():
-    mol = hubs_2conn(3)
+@pytest.mark.parametrize(
+    ("m", "expected_w", "expected_rho"),
+    [(1, 1, 1), (2, 3, 3), (3, 4, 5), (4, 5, 7)],
+)
+def test_hubs_corrected_w(m, expected_w, expected_rho):
+    mol = hubs_2conn(m)
     assert not is_toy1(mol)
-    assert n_2conn(mol) == 3
+    assert n_2conn(mol) == m
     mol.check_invariants()
+    assert W_of(mol) == expected_w
+    assert mol.circuit_rank() == expected_rho
 
 
-def test_three_set_gadget_constructs():
+def test_three_set_gadget_corrected_w():
     full = three_set_gadget()
     assert n_2conn(full) == 1
     full.check_invariants()
+    assert W_of(full) == 3
+    assert full.circuit_rank() == 2
 
 
-def test_two_set_controls_construct():
-    """YES/half/scramble 是待重跑 W 的输入，不预先断言它们的阈值关系。"""
+def test_two_set_controls_corrected_w_have_no_yes_scramble_gap():
+    """真实 W 下 YES 与 SCRAMBLE 相同，当前 gadget 没有 exact-cover gap。"""
     yes = two_sets_yes()
     half = two_sets_half()
     scr = two_sets_scramble()
@@ -43,6 +52,8 @@ def test_two_set_controls_construct():
         mol.check_invariants()
     assert yes.circuit_rank() == scr.circuit_rank() == 5
     assert half.circuit_rank() == 2
+    assert (W_of(yes), W_of(half), W_of(scr)) == (7, 6, 7)
+    assert (fast_v_d(yes), fast_v_d(half), fast_v_d(scr)) == (-25, -28, -25)
 
 
 def test_overlapping_sets_hit_slot_cap():

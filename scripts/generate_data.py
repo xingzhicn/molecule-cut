@@ -3,8 +3,8 @@
 
 用法（在课题目录下）：
 
-    uv run --frozen python scripts/generate_data.py            # 默认规模
-    uv run --frozen python scripts/generate_data.py --max-n 6  # 限制规模
+    uv run --frozen python scripts/generate_data.py            # canonical snapshot
+    uv run --frozen python scripts/generate_data.py --max-n 3 --max-n-vd 3 --max-n-coef 3
 
 只依赖标准库与本包，不需要 research 依赖组。
 
@@ -42,6 +42,9 @@ from molecule_cut.serialize import to_json
 
 DATA = ROOT / "data"
 D_DEFAULT = 3
+CANONICAL_MAX_N = 7
+CANONICAL_MAX_N_VD = 6
+CANONICAL_MAX_N_COEF = 6
 
 # 讲义 Prop 1.6 证明 part 4 使用的系数（SPEC §3.7）
 NOTES_COEFFICIENT = {OpKind.A: 1, OpKind.B: 2, OpKind.CUT33: 3, OpKind.CUT343: 4}
@@ -49,11 +52,12 @@ NOTES_COEFFICIENT = {OpKind.A: 1, OpKind.B: 2, OpKind.CUT33: 3, OpKind.CUT343: 4
 
 def write_csv(path: Path, rows: list[dict]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+    with path.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()), lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
-    print(f"  wrote {path.relative_to(ROOT)} ({len(rows)} rows)")
+    label = path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
+    print(f"  wrote {label} ({len(rows)} rows)")
 
 
 def gen_a_n(max_n: int) -> None:
@@ -67,7 +71,7 @@ def gen_a_n(max_n: int) -> None:
     rows = []
     for n in range(1, max_n + 1):
         lb = math.ceil((n - 1) / 5)
-        t = time.time()
+        started = time.perf_counter()
         best = None
         witness = None
         scanned = 0
@@ -90,13 +94,13 @@ def gen_a_n(max_n: int) -> None:
                     else "exact_full_enumeration_of_restricted_subclass"
                 ),
                 "molecules_scanned": scanned,
-                "seconds": round(time.time() - t, 2),
                 # 此枚举器固定 MU 为链、MD 为单父有根树；不是完整 Toy I 定义域。
                 "enumeration_scope": "|MD|=|MU|=n; MU chain; MD single-parent rooted tree",
                 "witness_json": to_json(witness),
             }
         )
-        print(f"  n={n}: a_n={best} (lb={lb}, scanned={scanned})", flush=True)
+        elapsed = time.perf_counter() - started
+        print(f"  n={n}: a_n={best} (lb={lb}, scanned={scanned}, {elapsed:.2f}s)", flush=True)
     write_csv(DATA / "a_n.csv", rows)
 
 
@@ -105,7 +109,7 @@ def gen_v_d(max_n: int, d: int) -> None:
     print("v_d / W ...")
     rows = []
     for n in range(1, max_n + 1):
-        t = time.time()
+        started = time.perf_counter()
         ws, vs, ans = [], [], []
         w_min_witness = None
         w_min = None
@@ -133,12 +137,16 @@ def gen_v_d(max_n: int, d: int) -> None:
                 "a_n": min(ans),
                 "minmax_gap": min(ws) - min(ans),
                 "molecules": len(ws),
-                "seconds": round(time.time() - t, 1),
                 "enumeration_scope": "|MD|=|MU|=n; MU chain; MD single-parent rooted tree",
                 "w_min_witness_json": to_json(w_min_witness),
             }
         )
-        print(f"  n={n}: W_min={min(ws)} a_n={min(ans)} gap={min(ws) - min(ans)}", flush=True)
+        elapsed = time.perf_counter() - started
+        print(
+            f"  n={n}: W_min={min(ws)} a_n={min(ans)} gap={min(ws) - min(ans)} "
+            f"({elapsed:.2f}s)",
+            flush=True,
+        )
     write_csv(DATA / "v_d.csv", rows)
 
 
@@ -192,14 +200,24 @@ def gen_coefficients(max_n: int) -> None:
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--max-n", type=int, default=5, help="a_n 的最大 n（默认 5）")
+    p.add_argument(
+        "--max-n",
+        type=int,
+        default=CANONICAL_MAX_N,
+        help=f"a_n 的最大 n（canonical 默认 {CANONICAL_MAX_N}）",
+    )
     p.add_argument(
         "--max-n-vd",
         type=int,
-        default=5,
-        help="v_d/W 的最大 n（默认 5；两种目标均独立计算）",
+        default=CANONICAL_MAX_N_VD,
+        help=f"v_d/W 的最大 n（canonical 默认 {CANONICAL_MAX_N_VD}；两种目标均独立计算）",
     )
-    p.add_argument("--max-n-coef", type=int, default=3, help="系数实测的最大 n（默认 3）")
+    p.add_argument(
+        "--max-n-coef",
+        type=int,
+        default=CANONICAL_MAX_N_COEF,
+        help=f"系数实测的最大 n（canonical 默认 {CANONICAL_MAX_N_COEF}）",
+    )
     p.add_argument("--d", type=int, default=D_DEFAULT, help="维数参数 d（默认 3）")
     args = p.parse_args()
 
