@@ -5,18 +5,47 @@
 Reproducible code and preprint for the sharp Toy I benchmark in the
 Deng--Hani--Ma two-layer molecule cutting problem.
 
-For every finite Toy I molecule and every permitted tie-break of the source
-Definition 11.4 algorithm, the paper proves
+## Main result
 
-\[
-\#\{33\}\ge \left\lceil\frac{|M_U|-1}{3}\right\rceil.
-\]
+Let $n=|M_U|$. For every finite Toy I molecule and every permitted
+tie-break of the source Definition 11.4 algorithm, the paper proves
 
-Three explicit families attain the bound for every \(|M_U|\ge4\), so
-\(a_n=\lceil(n-1)/3\rceil\).  The paper also records the scope-limited
-consequence \(v_d(M)\ge\lceil\rho(M)/3\rceil-10d\) within Toy I.
+$$
+\#\{33\}\ge \left\lceil\frac{n-1}{3}\right\rceil.
+$$
 
-The result does **not** determine the intrinsic optimum \(W\), classify its
+This bound is sharp:
+
+$$
+a_n=\left\lceil\frac{n-1}{3}\right\rceil \qquad (n\ge4),
+$$
+
+where $a_n$ is the minimum number of $\{33\}$ components over finite Toy I
+molecules with $|M_U|=n$ and all permitted tie-breaks. Three explicit
+families attain equality for every $n\ge4$. The paper also records the
+scope-limited consequence
+
+$$
+v_d(M)\ge\left\lceil\frac{\rho(M)}{3}\right\rceil-10d
+$$
+
+within Toy I.
+
+## Proof method
+
+The all-size result is a combinatorial amortised-flow proof, not an inference
+from finite enumeration.
+
+1. Exact event accounting gives $T=n-1-U$, where $T=\#\{33\}$ and
+   $U$ is the number of upper-layer atoms whose cross-layer partner was
+   removed earlier.
+2. For each lower-layer cleanup, a local parent-slot count bounds its orphaned
+   cross-bonds. Bottom fixed ends created by earlier cuts supply injectively
+   matched tokens, yielding $U\le2T$.
+3. Combining the two identities gives the lower bound. Three explicit
+   molecule families give equality, proving sharpness.
+
+The result does **not** determine the intrinsic optimum $W$, classify its
 complexity, cover arbitrary legal cut sequences, or extend to Toy I plus/II/III
 or the full molecule problem.
 
