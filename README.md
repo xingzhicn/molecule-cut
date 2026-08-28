@@ -7,11 +7,12 @@ Deng--Hani--Ma two-layer molecule cutting problem.
 
 ## Main result
 
-Let $n=|M_U|$. For every finite Toy I molecule and every permitted
-tie-break of the source Definition 11.4 algorithm, the paper proves
+Let $N_{33}$ denote the number of `{33}` components (the source's `#{33}`
+notation), and let $n=|M_U|$. For every finite Toy I molecule and every
+permitted tie-break of the source Definition 11.4 algorithm, the paper proves
 
 $$
-\#\{33\}\ge \left\lceil\frac{n-1}{3}\right\rceil.
+N_{33}\ge \left\lceil\frac{n-1}{3}\right\rceil.
 $$
 
 This bound is sharp:
@@ -20,7 +21,7 @@ $$
 a_n=\left\lceil\frac{n-1}{3}\right\rceil \qquad (n\ge4),
 $$
 
-where $a_n$ is the minimum number of $\{33\}$ components over finite Toy I
+where $a_n$ is the minimum number of `{33}` components over finite Toy I
 molecules with $|M_U|=n$ and all permitted tie-breaks. Three explicit
 families attain equality for every $n\ge4$. The paper also records the
 scope-limited consequence
@@ -36,9 +37,9 @@ within Toy I.
 The all-size result is a combinatorial amortised-flow proof, not an inference
 from finite enumeration.
 
-1. Exact event accounting gives $T=n-1-U$, where $T=\#\{33\}$ and
-   $U$ is the number of upper-layer atoms whose cross-layer partner was
-   removed earlier.
+1. Exact event accounting gives $T=n-1-U$, where $T$ is the number of `{33}`
+   components and $U$ is the number of upper-layer atoms whose cross-layer
+   partner was removed earlier.
 2. For each lower-layer cleanup, a local parent-slot count bounds its orphaned
    cross-bonds. Bottom fixed ends created by earlier cuts supply injectively
    matched tokens, yielding $U\le2T$.
